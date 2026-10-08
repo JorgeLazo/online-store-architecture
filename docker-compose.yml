@@ -1,0 +1,39 @@
+version: '3.8'
+
+### PostgreSQL Database for Inventory Service
+services:
+  db-inventory:
+    container_name: db-inventory
+    image: postgres:15.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jorge
+      POSTGRES_PASSWORD: Test123
+      POSTGRES_DB: inventory_db
+    ports:
+      - "5432:5432"
+
+### Mysql Database for Orders Service
+  db-orders:
+    container_name: db-orders
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: Test123
+      MYSQL_DATABASE: orders_db
+      MYSQL_USER: jorge
+      MYSQL_PASSWORD: Test123
+    ports:
+      - "3306:3306"
+
+### PostgreSQL Database for Products Service
+  db-products:
+    container_name: db-products
+    image: postgres:15.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jorge
+      POSTGRES_PASSWORD: Test123
+      POSTGRES_DB: products_db
+    ports:
+      - "5433:5432"
