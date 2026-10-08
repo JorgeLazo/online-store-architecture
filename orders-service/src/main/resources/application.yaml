@@ -1,3 +1,20 @@
+server:
+  port: 8082 # Puerto estándar para el servicio de órdenes
+
 spring:
   application:
     name: orders-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/orders_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: jorge
+    password: Test123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
