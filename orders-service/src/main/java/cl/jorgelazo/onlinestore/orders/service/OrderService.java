@@ -2,12 +2,15 @@ package cl.jorgelazo.onlinestore.orders.service;
 
 import java.util.UUID;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import cl.jorgelazo.onlinestore.orders.model.dtos.BaseResponse;
 import cl.jorgelazo.onlinestore.orders.model.dtos.OrderItemRequest;
+import cl.jorgelazo.onlinestore.orders.model.dtos.OrderItemsResponse;
 import cl.jorgelazo.onlinestore.orders.model.dtos.OrderRequest;
+import cl.jorgelazo.onlinestore.orders.model.dtos.OrderResponse;
 import cl.jorgelazo.onlinestore.orders.model.entities.Order;
 import cl.jorgelazo.onlinestore.orders.model.entities.OrderItems;
 import cl.jorgelazo.onlinestore.orders.repositories.OrderRepository;
@@ -42,10 +45,35 @@ public class OrderService {
             this.orderRepository.save(order);
             
         } else {
-            throw new IllegalArgumentException("Some items are not in stock");
+            throw new IllegalArgumentException("Some of the products are not in stock " );
         }
     }
 
+    public List<OrderResponse> getAllOrders() {
+        List<Order> orders = this.orderRepository.findAll();
+
+        return orders.stream().map(this::mapToOrderResponse).toList();
+    }
+
+    private OrderResponse mapToOrderResponse(Order order) {
+    
+        return new OrderResponse(
+                order.getId(),
+                order.getOrderNumber(),
+                order.getOrderItems().stream()
+                        .map(this::mapToOrderItemsResponse)
+                        .toList()
+        );
+    }
+
+    private OrderItemsResponse mapToOrderItemsResponse(OrderItems orderItem) {
+        return new OrderItemsResponse(
+                orderItem.getId(),
+                orderItem.getSku(),
+                orderItem.getPrice(),
+                orderItem.getQuantity()
+        );
+    }
 
     private OrderItems mapOrderItemRequestToOrderItem(OrderItemRequest orderItemRequest, Order order) {
         return OrderItems.builder()
